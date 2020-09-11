@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include('../components/head') -%>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/moment.css" />
+    <link type="text/css" rel="stylesheet" media="screen" href="/stylesheets/vendor/jquery-sakura.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js" integrity="sha256-OgiHfllOBEOiWQ2OcBsDncRG2k7QBW9Rs1dB7MH2N2s=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <div class="container-fluid navbar-fixed-top box-shadow" style="background-color: #fff; margin-bottom: 2rem;">
+      <br />
+      <b>
+        <a class="back-btn" onclick="takeMeBack()"><i class="fa fa-lg fa-arrow-left"></i></a>
+        <img src="/images/botto.png" class="logo" />
+        <span style="font-size: 2em; vertical-align: middle;">Botto</span>
+      </b>
+      <br />
+      <br />
+    </div>
+    <br />
+
+    <div class="container" style="margin-top: 9rem;">
+      <h1>Welcome to Your Virtual HR Interview</h1>
+      <br />
+      <br />
+      <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <h4>Heads up!</h4>
+        <p>
+          Make sure your answer is one message.
+          <br>
+          <br>
+          Your application will only be considered after this round.
+        </p>
+      </div>
+    </div>
+    <%- include('../components/footer') -%>
+  </body>
+  <script type="text/javascript">
+    function takeMeBack() {
+      history.back()
+    }
+  </script>
+  <script>
+    var whole_text = []
+    var msg_text = ""
+    function sendhandler(obj) {
+      //console.log("object type:"+obj.type);
+      msg_text = obj.data.input.text
+      whole_text.push(msg_text)
+    }
+    function receivehandler(event) {
+      console.log("last response:", event.data.output.generic[0].text)
+      var end = event.data.output.generic[0].text
+      if (end === "Thank you so much for taking out the time for the interview!") {
+        axios({
+          method: "post",
+          url: "/bot/<%= jobId %>/<%= user._id %>/",
+          data: {
+            text: whole_text
+          },
+          validateStatus: (status) => {
+            return true // I'm always returning true, you may want to do it depending on the status received
+          }
+        }).then(() => {
+          window.location.href = "/";
+        }).catch((error) => {
+          console.log(error)
+        })
+      }
+    }
+    window.watsonAssistantChatOptions = {
+      integrationID: "90c750df-67a8-4ce3-9505-7454f17355bf", // The ID of this integration.
+      region: "eu-gb", // The region your integration is hosted in.
+      serviceInstanceID: "ee2980f5-02e6-40fd-bfb8-2d6aced75f0f", // The ID of your service instance.
+      onLoad: function (instance) {
+        instance.on({ type: "send", handler: sendhandler })
+        instance.on({ type: "receive", handler: receivehandler })
+        instance.render()
+      }
+    }
+    setTimeout(function () {
+      const t = document.createElement("script")
+      t.src = "https://web-chat.global.assistant.watson.appdomain.cloud/loadWatsonAssistantChat.js"
+      document.head.appendChild(t)
+    })
+  </script>
+</html>

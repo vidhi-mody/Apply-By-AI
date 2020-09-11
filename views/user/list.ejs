@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    <%- include('../components/head') -%>
+    <body ng-app="">
+        <%- include('../components/navbar') -%>
+        <div id="mainPage">
+            <%- include('../components/sidebar') -%>
+            <div class="column col-xs-12 col-sm-9 col-lg-10" id="main" style="margin: auto">
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="text" id="search-box" style="margin-bottom: 2%" class="form-control" onkeyup="updateList(this.value, 'search');" placeholder="Search here..." />
+
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-primary">Users 
+                                <img style="display:none" id="searchLoadUser" height="22" src="/images/loader.gif">
+                            </li>
+                            <div id="user-list">
+                                <% for(let user of users) { %>
+                                    <li class="list-group-item">
+                                        <img class="logo" src="<%= user.resume.basics.picture %>">
+                                        <b>
+                                            <a id="list-username" href="/users/user/@<%= user.username %>" ><%= user.resume.basics.name %> [@<%= user.username %>]</a>
+                                        </b>
+                                    </li>
+                                <% } %>
+                            </div>
+                        </ul>
+
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-primary">Companies 
+                                <img style="display:none" id="searchLoadCompany" height="22" src="/images/loader.gif">
+                            </li>
+                            <div id="company-list">
+                                <% for(let company of companies) { %>
+                                    <li class="list-group-item">
+                                        <img class="logo" src="<%= company.logo %>">
+                                        <b>
+                                            <a id="list-username" href="/users/company/@<%= company.username %>" ><%= company.name %> [@<%= company.name%>]</a>
+                                        </b>
+                                    </li>
+                                <% } %>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="notify_message" class=" notify_message-success">
+            <center>Search for users/companies...</center>
+        </div>
+
+        <%- include('../components/tabs') -%>
+        <%- include('../components/footer') -%>
+    </body>
+    <script type="text/javascript">
+        let lang = window.location.href.split('lang=')[1]
+
+        if(lang) {
+            $('#search-box').val(lang)
+            updateList(lang)
+        } else {
+            updateList()
+        }
+
+        function updateList(query, type) {
+            $('#searchLoadUser').css('display', '')
+            $.ajax({
+                method: 'GET',
+                url: '/api/v1/search',
+                data: {
+                    q: query
+                }
+            }).done(function (data) {
+                $('#user-list').text('')
+                $('#company-list').text('')
+
+                for(var u of data.users) {
+                    $('#user-list').append(`
+                    <li class="list-group-item">
+                        <img class="logo" src="${u.resume.basics.picture}">
+                        <b>
+                            <a href="/users/user/@${u.username}" id="list-username">${u.resume.basics.name + ' [' + u.username + ']'}</a>
+                        </b>
+                    </li>
+                    `)
+                }
+
+                for(var c of data.companies) {
+                    $('#company-list').append(`
+                    <li class="list-group-item">
+                        <img class="logo" src="${c.logo}">
+                        <b>
+                            <a href="/users/company/@${c.username}" id="list-username">${c.name + ' [' + c.username + ']'}</a>
+                        </b>
+                    </li>
+                    `)
+                }
+
+                $('#searchLoadUser').fadeOut()
+                $("#searchLoadCompany").fadeOut()
+            }).fail(function(error) {
+                show_notification("Oops! Error: " + error.message, "danger")
+                $("#searchLoadUser").fadeOut()
+                $("#searchLoadCompany").fadeOut()
+            })
+
+
+        }
+
+
+    </script>
+</html>

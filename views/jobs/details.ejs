@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+  <%- include('../components/head') -%>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/moment.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  <body>
+    <%- include('../components/navbar') -%>
+    <div style="margin-top: 75px;">
+      <%- include('../components/sidebar') -%>
+      <div class="col-xs-12 col-sm-9 col-lg-10" style="margin: auto;" id="main">
+        <div class="row profile">
+          <div class="col-md-4">
+            <div class="profile-sidebar">
+              <div class="profile-userpic">
+                <center>
+                  <img src="<%= user.logo %>" class="img-responsive" style="width: 150px; height: 150px;" alt="" />
+                </center>
+              </div>
+              <div class="profile-usertitle">
+                <div class="profile-usertitle-name">
+                  <%= user.name %>
+                  <br />
+                  <small style="color: orange;">@<%= user.username %></small>
+                  <br />
+                </div>
+                <div class="profile-usertitle-job">
+                  <%= job.role %>
+                </div>
+                <div class="profile-user-desc">
+                  <i><%- job.description -%></i>
+                </div>
+              </div>
+              <div class="profile-userbuttons">
+                <div class="row">
+                    <div class="col-md-6">
+                        <% for(let skill of job.skills) { %>
+                          <span class="label label-warning"><%= skill %></span>
+                        <% } %>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div id="applications" class="profile-content tabs">
+              <h2>Applications</h2>
+              <br />
+              <div class="row">
+                <canvas id="canvas" width="100%" class="chartjs-render-monitor"></canvas>
+                <% for(let application of job.applications) { %>
+                    <div class="col-md">
+                        <div class="gram-card">
+                            <div class="gram-card-header">
+                                <img class="gram-card-user-image lozad" src="<%= application.by.resume.basics.picture %>">
+                                <a class="gram-card-user-name" href="/users/user/@<%= application.by.username %>">
+                                    <%= application.by.username %>
+                                </a>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="gram-card-content">
+                                <p>
+                                    <% for(let skill of application.matchingSkills) { %>
+                                      <span class="label label-info"><%= skill %></span>
+                                    <% } %>
+                                    <br>
+                                    <br>
+                                    <i>Q1. Tell me about yourself</i>
+                                    <br>
+                                    <span style="color: yellowgreen">
+                                        <%= application.personality.wholeText[0] %>
+                                    </span>
+                                    <br>
+                                    <br>
+                                    <i>Q2. Why do you want to join this company?</i>
+                                    <br>
+                                    <span style="color: yellowgreen">
+                                        <%= application.personality.wholeText[1] %>
+                                    </span>
+                                    <br>
+                                    <br>
+                                    <i>Q3. What are your strengths and weaknesses?
+                                    <br>
+                                    <span style="color: yellowgreen">
+                                        <%= application.personality.wholeText[2] %>
+                                    </span>
+                                    <br>
+                                    <br>
+                                    <i>Q4. What is your dream job?
+                                    <br>
+                                    <span style="color: yellowgreen">
+                                        <%= application.personality.wholeText[3] %>
+                                    </span>
+                                    <br>
+                                    <br>
+                                    <i>Q5. Why should we hire you?
+                                    <br>
+                                    <span style="color: yellowgreen">
+                                        <%= application.personality.wholeText[4] %>
+                                    </span>
+                                    <br>
+                                    <br>
+                                    <hr>
+                                    <div class="gram-card-footer">
+                                        <a type="button" href="https://buzzy.netlify.app" target="_blank" style="margin: 5px 5px;" class="btn btn-warning btn-sm">
+                                            Schedule Interview
+                                        </a>
+                                        <% if(application.selected === 'under review') { %>
+                                          <a type="button" id="<%= application._id %>" href="#" style="margin: 5px 5px;" class="btn btn-success btn-sm hireBtn hire-<%= application._id %>">
+                                              Hire
+                                          </a>
+                                          <a type="button" id="<%= application._id %>" href="#" style="margin: 5px 5px;" class="btn btn-danger btn-sm rejectBtn reject-<%= application._id %>">
+                                              Reject
+                                          </a>
+                                        <% } %>
+                                    </div>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="notify_message" class="notify_message-success">
+      <center>Welcome to <%= user.name %>'s Page!</center>
+    </div>
+    <%- include('../components/tabs') -%> <%- include('../components/footer') -%>
+  </body>
+  <script>
+    var tabs = $(".tab")
+    tabs.on("click", function (e) {
+      let tab = this
+      e.preventDefault()
+      tabs.removeClass("active")
+      $(tab).addClass("active")
+      $(".tabs").fadeOut(500, function () {
+        $("#" + $(tab).attr("name"))
+          .delay(500)
+          .fadeIn()
+      })
+      return false
+    })
+  </script>
+  <script>
+    $('.hireBtn').on('click', hireById)
+
+    function hireById() {
+      const elem = this  
+      $.ajax({
+        method: 'POST',
+        url: `/api/v1/application/hire?cache=${Math.random()}`,
+          data: {
+             _id: this.id.toString(),
+        }
+      }).done(function (data) {
+        $(elem).html('Hired').off('click').prop('disabled', true)
+        $(`.reject-${elem.id}`).off('click').prop('disabled', true)
+        show_notification(data.message, 'success')
+      }).fail(function(error) {
+        show_notification('Some error while hiring candidate', 'danger')
+          console.log(error)
+      })
+    }
+
+    $('.rejectBtn').on('click', rejectById)
+
+    function rejectById() {
+      console.log(this.id)
+      const elem = this
+      $.ajax({
+        method: 'POST',
+        url: `/api/v1/application/hire?cache=${Math.random()}`,
+        data: {
+          _id: this.id.toString(),
+        } 
+      }).done(function (data) {
+        $(elem).html('Rejected').off('click').prop('disabled', true)
+        $(`.hire-${elem.id}`).off('click').prop('disabled', true)
+        show_notification(data.message, 'success')
+      }).fail(function(error) {
+        show_notification('Some error while hiring candidate', 'danger')
+        console.log(error)
+      })
+    }
+  </script>
+  <script>
+    var datasets = JSON.parse('<%- JSON.stringify(barChartDataset) %>')
+
+    var barChartData = {
+      labels: ['Skills', 'Openness', 'Conscientiousness', 'Extraversion', 'Agreeableness', 'Neuroticism'],
+      datasets
+    }
+
+    window.onload = function() {
+      var ctx = document.getElementById('canvas').getContext('2d')
+      window.myBar = new Chart(ctx, {
+        type: 'bar',
+        data: barChartData,
+        options: {
+          title: {
+            display: true,
+            text: 'User Score Chart'
+          },
+          tooltips: {
+            mode: 'index',
+            intersect: false
+          },
+          responsive: true,
+          scales: {
+            xAxes: [{
+              stacked: true
+            }],
+            yAxes: [{
+              stacked: true
+            }]
+          }
+        }
+      })
+    }
+  </script>
+</html>

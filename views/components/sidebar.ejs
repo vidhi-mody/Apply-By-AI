@@ -1,0 +1,75 @@
+<br />
+<div id="sidebar" class="column no-side-pad hidden-xs col-xs-12 col-sm-3 col-lg-2 sidebar-offcanvas float-right">
+  <div class="row">
+    <div class="col-lg-12 no-pad-left no-pad-right">
+      <div class="navTitle"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 no-pad-left no-pad-right">
+      <ul class="list-group">
+        <li class="list-group-item list-group-item-primary">Action</li>
+        <!-- <li class="list-group-item">
+          <i class="fa fa-search"></i>&nbsp;
+          <a href="/u">search</a>
+        </li>
+        <li class="list-group-item">
+          <i class="fa fa-moon"></i>&nbsp;
+          <a href="#" id="darkmode">dark mode</a>
+        </li>
+        <li class="list-group-item">
+          <i class="fa fa-paper-plane"></i>&nbsp;
+          <a href="/chat">chat</a>
+        </li>
+        <li class="list-group-item">
+          <i class="fa fa-heart"></i>&nbsp;
+          <a href="/me/activity">activity</a>
+        </li> -->
+        <li class="list-group-item">
+          <i class="fa fa-user"></i>&nbsp;
+          <a title="Your user profile" href="/users/<%= user.usertype %>/@<%= user.username %>" id="profile">@<%= user.username %></a>
+        </li>
+        <li class="list-group-item">
+          <i class="fa fa-moon"></i>&nbsp;
+          <a title="Toggle light/dark mode" href="#" id="darkmode">Light/Dark</a>
+        </li>
+        <li class="list-group-item">
+          <i class="fa fa-search"></i>&nbsp;
+          <a title="Search for users/companies" href="/users/">Search</a>
+        </li>
+        <li class="list-group-item">
+          <i class="fa fa-plus"></i>&nbsp;
+          <a title="Share your thoughts" href="/post/upload/">Post</a>
+        </li>
+        <% if(user.usertype === 'company') { %>
+          <li class="list-group-item">
+              <i class="fa fa-briefcase"></i>&nbsp;
+              <a title="Create a job" href="/post/job/">Post a Job</a>
+          </li>
+        <% } %>
+        <li class="list-group-item">
+          <i class="fa fa-bell"></i>&nbsp;
+          <a title="Notifications" href="/notifications/">Notifications</a>
+        </li>
+      </ul>
+      <% if(user.usertype === 'user') { %>
+      <ul class="list-group">
+        <li class="list-group-item list-group-item-primary">Jobs</li>
+        <li class="list-group-item">
+          <i class="fa fa-clock"></i>&nbsp;
+          <a title="Jobs" href="/post/job/list">Recent</a>
+        </li>
+      </ul>
+      <% } %>
+      <ul class="list-group">
+        <li class="list-group-item list-group-item-primary">
+          Tasks
+        </li>
+        <li class="list-group-item">
+          <i class="fa fa-power-off"></i>&nbsp;
+          <a title="Exit" href="/account/out/">Sign out</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

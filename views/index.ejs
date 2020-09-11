@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('components/head') -%>
+    <link type="text/css" rel="stylesheet" media="screen" href="/stylesheets/vendor/jquery-sakura.min.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/moment.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/ns.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/ns-overrides.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/progressive-image.css" />
+    <script src="/scripts/vendor/modernizr.custom.js"></script>
+    <script src="/scripts/vendor/progressive-image.js"></script>
+  </head>
+  <script>
+      var user = <%- JSON.stringify(user) -%>;
+      var username = user.username;
+  </script>
+  <body>
+    <%- include('components/navbar') -%>
+    <div id="mainPage" style="height: 100%;">
+      <%- include('components/sidebar') -%> <%- include('components/main') -%>
+    </div>
+    <%- include('components/tabs') -%>
+    <%- include('components/footer') -%>
+    <div id="notify_message" class="notify_message-success"></div>
+  </body>
+  <script src="scripts/vendor/classie.js"></script>
+  <script src="scripts/vendor/notificationFx.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $.ajax({
+        method: "GET",
+        url: "/api/v1/notifications?cache=" + Math.random()
+      }).done(function (data) {
+        if (data != 0) {
+          if (data == localStorage.notified) {
+            return
+          } else {
+            localStorage.notified = data
+          }
+          show_new_notification({ msg: `You have ${data} new notification(s).` }, "notice", data)
+        }
+      })
+    })
+  </script>
+  <script src="/scripts/posts.js?cache=<%= Math.random() %>"></script>
+</html>

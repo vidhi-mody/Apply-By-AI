@@ -1,0 +1,219 @@
+
+<!doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" type="text/css" href="/stylesheets/vendor/resume.css">
+  <body>
+  
+  <div id="resume">
+    	<header id="header" class="clear">
+    		<div>
+    			<h1 class="name"><%= user.resume.basics.name %></h1>
+    			<h2 class="label"><%= user.resume.basics.label %></h2>
+    		</div>
+    		
+    		<span class="location">
+    			<span class="address"><%= user.resume.basics.location.address %>,</span> 
+    			<span class="postalCode"><%= user.resume.basics.location.postalCode %>,</span> 
+    			<span class="city"><%= user.resume.basics.location.city %>,</span> 
+    			<span class="region"><%= user.resume.basics.location.region %></span> 
+    			<span class="countryCode"><%= user.resume.basics.location.countryCode %></span> 
+    		</span>
+    		
+    
+    		<div id="contact">
+    			<div class="website">
+    				<span class="fa fa-external-link"></span>
+    				<a target="_blank" target="_blank" href="<%= user.resume.basics.website %>"><%= user.resume.basics.website %></a>
+    			</div>
+    			<div class="email">
+    				<span class="fa fa-envelope-o"></span>
+    				<a href="mailto:<%= user.resume.basics.email %>"><%= user.resume.basics.email %></a>
+    			</div>
+    			<div class="phone">
+    				<span class="fa fa-mobile"></span>
+    				<a href="tel:<%= user.resume.basics.phone %>"><%= user.resume.basics.phone %></a>
+    			</div>
+    		</div>
+    
+    		<div id="profiles">
+          <% for(let profile of user.resume.basics.profiles) { %>
+            <div class="item">
+              <div class="username">
+                <span class="fa fa-<%= profile.network.toLowerCase() %> <%= profile.network.toLowerCase() %> social"></span>
+                <a href="<%= profile.url %>"><span><%= profile.url %></span></a>
+              </div>
+            </div>
+          <% } %>
+    		</div>
+    	</header>
+    
+    	<section class="section main-summary">
+    		<section>
+    			<div><p><%= user.resume.basics.summary %></p></div>
+    		</section>
+    	</section>
+    
+    <section class="section margin1">
+    	<header>
+    		<h2 class='section-title'>Skills</h2>
+      </header>
+    	<section id="skills">
+        <% for(let skill of user.resume.skills) { %>
+    		<div class="item">
+    			<h3 class="name">
+    				<%= skill.name %>
+    			</h3>
+    			 
+    			<div class="level <%= skill.level.toLowerCase() %>">
+    				<em><%= skill.level %></em>
+    				<div class="bar"></div>
+    			</div>
+    			<ul class="keywords">
+            <% for(let keyword of skill.keywords) { %>
+              <li><%= keyword %></li>
+            <% } %>
+    			</ul>
+    		</div>
+    		<% } %>
+      </section>
+    </section>
+
+    <% if(user.resume.work && user.resume.work.length) { %>
+      <section class="section">
+        <header>
+          <h2 class='section-title'>Work Experience <span class="item-count">(<%= user.resume.work.length %>)</span></h2>
+        </header>
+      
+        <section id="work">
+          <% for(let i=0; i<user.resume.work.length; i++) { %>
+            <section class="work-item">
+        
+                <input id="work-item-<%= i %>" type="checkbox" class="toggle-item" checked="checked" />
+                <label for="work-item-<%= i %>"></label>
+        
+              <header>
+                <div class="position"><%= user.resume.work[i].position %></div>
+                <div class="company"><%= user.resume.work[i].company %></div>
+                <div class="date">
+                  <span class="startDate"><%= user.resume.work[i].startDate %> </span> 
+                  <span class="endDate">- <%= user.resume.work[i].endDate %></span> 
+                </div>
+              </header>
+              
+              <span class="website">
+                <a target="_blank" href="<%= user.resume.work[i].website %>"><%= user.resume.work[i].website %></a>
+              </span>      	<div class="item" id="work-item">
+                <div class="summary">
+                  <p><p><%= user.resume.work[i].workSummary %></p></p>
+                </div>
+              </div>
+            </section>
+          <% } %>
+        </section>
+      </section>
+    <% } %>
+
+    <section class="section">
+      <header>
+        <h2 class='section-title'>Education <span class="item-count">(<%= user.resume.education.length %>)</span></h2>
+      </header>
+    
+      <section id="education">
+        
+        <% for(let i=0; i<user.resume.education.length; i++) { %>
+          <section class="education-item">
+            <header>
+              <div class="header-left">
+                <div class="studyType">
+                  <%= user.resume.education[i].studyType %>
+                </div>
+                <div class="area">
+                  <%= user.resume.education[i].area %>
+                </div>
+                <div class="institution">
+                  <%= user.resume.education[i].institution %>
+                </div>
+              </div>
+              <div class="date">
+                <span class="startDate">
+                  <%= user.resume.education[i].startDate %>
+                </span>
+                <span class="endDate">
+                - <%= user.resume.education[i].endDate %>
+                </span>
+              </div>
+            </header>
+      
+            <div class="item" style="padding: 0">
+              <div class='gpa'>
+                <strong> Grade:</strong> <span><%= user.resume.education[i].gpa %></span>
+              </div>
+            </div>
+          </section>
+        <% } %>
+      </section>
+    </section>
+
+    <% if(user.resume.awards && user.resume.awards.length) { %>
+      <section class="section">
+        <header>
+          <h2 class='section-title'>Awards <span class="item-count">(<%= user.resume.awards.length %>)</span></h2>
+        </header>
+        <section id="awards">
+          <% for(let i=0; i<user.resume.awards.length; i++) { %>
+            <section class="award-item">
+                <input id="award-item-<%= i %>" type="checkbox" class="toggle-item" checked="checked" />
+                <label for="award-item-<%= i %>"></label>
+        
+              <header>
+                <div class="header-left">
+                  <div class="title">
+                    <%= user.resume.awards[i].title %>
+                  </div>
+                  <div class="awarder">
+                    <%= user.resume.awards[i].awarder %>
+                  </div>
+                </div>
+                <div class="date">
+                  <%= user.resume.awards[i].date %>
+                </div>
+              </header>
+              
+              <div class="item">
+                <div class="summary">
+                  <p><p><%= user.resume.awards[i].summary %></p></p>
+                </div>
+              </div>
+            </section>
+          <% } %>
+        </section>
+      </section>
+    <% } %>
+    
+    <% if(user.resume.references && user.resume.references.length) { %>
+      <section class="section">
+        <header>
+          <h2 class='section-title'>References <span class="item-count">(<%= user.resume.references.length %>)</span></h2>
+        </header>
+        <section id="references">
+          <% for(let reference of user.resume.references) { %>
+            <div class="item">
+              <blockquote class="reference">
+                &#8220;&#32;<%= reference.reference %>&#32;&#8221;
+              </blockquote>
+              <div class="name">
+                <%= reference.name %>
+              </div>
+            </div>
+          <% } %>
+        </section>
+      </section>
+    <% } %>
+
+  </body>
+</html>

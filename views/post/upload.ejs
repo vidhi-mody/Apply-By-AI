@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <%- include('../components/head') -%>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/moment.css" />
+  <body>
+    <%- include('../components/navbar') -%>
+    <div id="mainPage" style="height: 100%;">
+      <%- include('../components/sidebar') -%>
+      <div class="column col-xs-12 col-sm-9 col-lg-10" style="margin: auto" id="main">
+        <div class="row">
+          <div class="col-md-12 align-center">
+            <form action="/post/upload" method="post" enctype="multipart/form-data">
+              <div class="gram-card">
+                <div class="gram-card-header">
+                  <% if(user.usertype === 'user') { %>
+                  <img src="<%= user.resume.basics.picture %>" class="gram-card-user-image" />
+                  <% } else { %>
+                  <img src="<%= user.logo %>" class="gram-card-user-image" />
+                  <% } %>
+                  <a class="gram-card-user-name" href="/users/<%= user.usertype %>/@<%= user.username %>"><%= user.username %></a>
+                </div>
+                <br />
+                <br />
+                <div class="gram-card-image">
+                  <center>
+                    <div class="upload-btn-wrapper">
+                      <button class="btn agradient btn-action whoop" id="post"><i class="fa fa-lg fa-upload"></i> Upload an image (optional)</button>
+                      <input type="file" name="filetoupload" onchange="readURL(this);" id="file" />
+                    </div>
+                    <div id="video-preview"></div>
+                    <img src="" id="img-preview" style="width: 25%; margin: auto" />
+                  </center>
+                </div>
+                <div class="gram-card-content">
+                  <p>
+                    <br />
+                    <input type="text" name="caption" placeholder="some_cool_text" required class="form-control" />
+                    <select class="form-control" name="type" style="margin-top: 2%;" required>
+                      <option>moment</option>
+                      <option>promotion</option>
+                      <option>news/trending</option>
+                      <option>engagement</option>
+                      <option>meme/fact</option>
+                      <option>thought</option>
+                    </select>
+                  </p>
+                  <br />
+                  <hr />
+                </div>
+                <div class="gram-card-footer">
+                  <button class="footer-action-icons btn btn-primary float-right" style="margin-right: 2%;"><i class="glyphicon glyphicon-file-invoice"></i> Post</button>
+                  <p style="margin: 0;">By posting you agree to the <a href="/terms">terms and conditions</a></p>
+                </div>
+              </div>
+              <br />
+              <br />
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="notify_message" class=" notify_message-success">
+    </div>
+    <%- include('../components/footer') %>
+    <%- include('../components/tabs') -%>
+  </body>
+  <script type="text/javascript">
+    show_notification('Upload something here!','success')
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader()
+
+            reader.onload = function(e) {
+                if(e.target.result.match(RegExp('data:img*'))) {
+                    $('#img-preview').attr('src', e.target.result)
+                }
+            }
+
+            reader.readAsDataURL(input.files[0])
+        }
+    }
+  </script>
+</html>

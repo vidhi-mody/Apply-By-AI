@@ -1,0 +1,28 @@
+<div class="column col-xs-12 col-sm-9 col-lg-10" style="margin: auto;" id="main">
+    <% for(var y=0;y<events.length;y++) { %>
+        <ul class="list-group" style="background-color:black;background-image: url('<%= events[y].img %>'); background-size: cover;background-repeat: no-repeat;border-radius:10px;">
+            <li class="list-group-item list-group-item-primary" style="background-color: rgba(0, 0, 0, 0.65); color:#fff; z-index: 2">
+                <h3 style="text-shadow: 2px 2px rgba(255, 255, 255, 0.35);"><%- events[y].title %></h3>
+                <h4><%- events[y].text %></h4>
+                <a class="float-right" style="color:#fff"  href="<%= events[y].link.link_url %>"><%= events[y].link.link_text %></a> <br>
+            </li> 
+        </ul>
+    <% } %>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="nav nav-tabs">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="sort-btn nav-link active"><i class="fa fa-home mr-2"></i> Feed</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="sort-btn nav-link"><i class="fa fa-chart-bar mr-2"></i> Top</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div id="posts" user-id="<%= user.username %>"></div>
+</div>

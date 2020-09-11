@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <%- include('../../components/head') -%>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/landing.css" />
+  <link rel="stylesheet" type="text/css" href="/stylesheets/moment.css" />
+  <body>
+    <%- include('../../components/navbar') -%>
+    <div class="landing-main">
+      <!-- Banner -->
+      <section id="banner">
+        <div class="inner">
+          <h2 class="major special">
+            <span class="landing-headline">
+              Tell us more about you!
+            </span>
+          </h2>
+          <ul class="actions special stacked">
+            <li>
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-7 col-sm-12 col-xs-12" style="margin: auto">
+                    <form action="/account/new/user/info" method="POST">
+                      <h3 style="color: black; text-align: left;">GENERAL</h3>
+                      <div class="form-group">
+                        <label for="phone">Phone*</label>
+                        <input type="tel" class="form-control" id="phone" placeholder="+91 xxxxxxxxxx" name="phone" pattern="[0-9]{10}" required />
+                      </div>
+                      <div class="form-group">
+                        <label for="website">Portfolio*</label>
+                        <input type="url" class="form-control" id="website" placeholder="Enter the URL of your website" name="website" />
+                      </div>
+                      <div class="form-group">
+                        <label for="summary">Bio*</label>
+                        <textarea class="form-control" id="summary" placeholder="A short bio describing you" name="summary" required></textarea>
+                      </div>
+                      <div class="form-group">
+                        <label for="expertise">Area of Expertise*</label>
+                        <input type="text" class="form-control" id="expertise" placeholder="(eg. Software Developer)" name="expertise" required />
+                      </div>
+
+                      <h3 style="color: black; text-align: left; margin-top: 40px;">
+                        LOCATION
+                      </h3>
+                      <div class="form-group">
+                        <label for="address">Address*</label>
+                        <input type="text" class="form-control" id="address" placeholder="Enter your address" name="address" required />
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="city">City*</label>
+                          <input type="text" name="city" class="form-control" id="city" placeholder="City" required />
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="postalCode">Postal Code*</label>
+                          <input type="text" name="postalCode" class="form-control" id="postalCode" placeholder="Postal Code" required />
+                        </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="countryCode">Country Code*</label>
+                          <input type="text" name="countryCode" class="form-control" id="countryCode" placeholder="Country Code (eg. US)" required />
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="region">Region*</label>
+                          <input type="text" name="region" class="form-control" id="region" placeholder="Region (eg. CA)" required />
+                        </div>
+                      </div>
+
+                      <h3 style="color: black; text-align: left; margin-top: 40px;">
+                        WORK EXPERIENCE
+                      </h3>
+                      <div class="form-group">
+                        <div class="field_wrapper"></div>
+                        <button class="button default btn btn-warning add_button">
+                          Add
+                        </button>
+                      </div>
+
+                      <h3 style="color: black; text-align: left; margin-top: 40px;">
+                        EDUCATION
+                      </h3>
+                      <div class="form-group">
+                        <div class="field_wrapper1">
+                          <div>
+                            <label for="institution">Institution*</label>
+                            <input type="text" id="institution" class="form-control" placeholder="University/School Name" name="institution[]" required / >
+                          </div>
+                          <br />
+                          <div class="form-group">
+                            <label for="studyType">Degree type*</label>
+                            <input type="text" class="form-control" id="studyType" placeholder="Enter your Degree type (eg. Masters)" name="studyType[]" required />
+                          </div>
+                          <div class="form-group">
+                            <label for="area">Stream/ Major*</label>
+                            <input type="text" class="form-control" id="area" placeholder="Enter your specialization" name="area[]" required />
+                          </div>
+                          <div class="form-row">
+                            <div class="form-group col-md-6">
+                              <label for="studyStartDate">From*</label>
+                              <input type="month" name="studyStartDate[]" class="form-control" id="studyStartDate" required />
+                            </div>
+                            <div class="form-group col-md-6">
+                              <label for="studyEndDate">To*</label>
+                              <input type="month" name="studyEndDate[]" class="form-control" id="studyEndDate" required />
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="gpa">CGPA*</label>
+                            <input type="number" class="form-control" id="gpa" placeholder="Enter your CGPA" name="gpa[]" min="0" max="4" step="0.01" required />
+                          </div>
+                        </div>
+                        <button class="button default btn btn-warning add_button1">
+                          Add
+                        </button>
+                      </div>
+
+                      <h3 style="color: black; text-align: left; margin-top: 40px;">
+                        ACHIEVEMENTS
+                      </h3>
+                      <div class="form-group">
+                        <div class="field_wrapper2"></div>
+                        <button class="button default btn btn-warning add_button2">
+                          Add
+                        </button>
+                      </div>
+
+                      <h3 style="color: black; text-align: left; margin-top: 40px;">
+                        SKILLS
+                      </h3>
+                      <div class="form-group">
+                        <div class="field_wrapper3"></div>
+                        <br />
+                        <button class="button default btn btn-warning add_button3">
+                          Add
+                        </button>
+                      </div>
+
+                      <h3 style="color: black; text-align: left; margin-top: 40px;">
+                        REFERENCES
+                      </h3>
+                      <div class="form-group">
+                        <div class="field_wrapper4"></div>
+                        <br />
+                        <button class="button default btn btn-warning add_button4">
+                          Add
+                        </button>
+                      </div>
+
+                      <h3 style="color: black; text-align: left; margin-top: 40px;">
+                        SOCIAL
+                      </h3>
+                      <div class="form-group">
+                        <label for="linkedin">LinkedIn</label>
+                        <input type="url" class="form-control" id="linkedin" placeholder="LinkedIn Profile URL" name="linkedin" />
+                      </div>
+                      <div class="form-group">
+                        <label for="github">GitHub</label>
+                        <input type="url" class="form-control" id="github" placeholder="GiHub Profile URL" name="github" />
+                      </div>
+                      <div class="form-group">
+                        <label for="twitter">Twitter</label>
+                        <input type="url" class="form-control" id="twitter" placeholder="Twitter Profile URL" name="twitter" />
+                      </div>
+                      <button id="submitButton" type="submit" class="button primary btn btn-primary">
+                        Submit
+                      </button>
+                      <button type="reset" class="button btn btn-danger">
+                        Reset
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <div id="notify_message" class="notify_message-success"></div>
+    <%- include('../../components/footer') -%>
+  </body>
+
+  <script src="/scripts/vendor/breakpoints.min.js"></script>
+  <script src="/scripts/vendor/browser.min.js"></script>
+  <script src="/scripts/vendor/classie.js"></script>
+  <script src="/scripts/vendor/main.js"></script>
+  <script src="/scripts/vendor/jquery.scrolly.min.js"></script>
+  <script src="/scripts/util.js"></script>
+  <script src="/scripts/menu-form.js"></script>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Error - <%= error.status %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/stylesheets/cerulean.bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css?family=Product+Sans" rel="stylesheet" type="text/css" />
+    <link rel="icon" href="images/logo/logo.png" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <script src="/scripts/vendor/stroll.min.js"></script>
+    <script src="/scripts/vendor/jquery.min.js"></script>
+    <script src="/scripts/vendor/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/scripts/dom.js"></script>
+    <script type="text/javascript">
+      ScrollReveal().reveal(".gram-card", {
+        opacity: null
+      })
+    </script>
+  </head>
+  <body>
+    <%- include('components/navbar') -%>
+    <div id="mainPage" style="height: 100%;">
+      <div class="column col-xs-12 col-sm-9 col-lg-10" style="margin: auto;" id="main">
+        <div class="row">
+          <div class="col-md-12 align-center">
+            <h1>Error!</h1>
+            <small><%= (error.message || message) %></small>
+            <%= error.status %>
+            <br />
+            <br />
+            <a class="btn btn-danger" href="/">Home</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="notify_message" class="notify_message-success">
+      <center>You are now a part of Apply-by-AI!</center>
+    </div>
+    <%- include('components/footer') -%>
+  </body>
+  <script type="text/javascript" src="/scripts/vendor/modernizr.custom.js"></script>
+  <script type="text/javascript" src="/scripts/vendor/notificationFx.js"></script>
+  <script type="text/javascript">
+    show_notification("Error processing request", "danger")
+  </script>
+</html>

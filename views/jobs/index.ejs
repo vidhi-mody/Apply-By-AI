@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../components/head') -%>
+    <link type="text/css" rel="stylesheet" media="screen" href="/stylesheets/vendor/jquery-sakura.min.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/moment.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/ns.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/ns-overrides.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/progressive-image.css" />
+    <script src="/scripts/vendor/modernizr.custom.js"></script>
+    <script src="/scripts/vendor/progressive-image.js"></script>
+  </head>
+  <script>
+    var user = <%- JSON.stringify(user) -%>;
+    var username = user.username;
+  </script>
+  <body>
+    <%- include('../components/navbar') -%>
+    <div id="mainPage" style="height: 100%;">
+      <%- include('../components/sidebar') -%>
+      <div class="column col-xs-12 col-sm-9 col-lg-10" style="margin: auto;" id="main">
+        <div id="jobs">
+            <% for(let job of jobs) { %>
+              <div class="col-md">
+                <div class="gram-card">
+                  <div class="gram-card-header">
+                      <img class="gram-card-user-image lozad" src="<%= (job.company.logo ) %>">
+                      <a class="gram-card-user-name" href="/users/<%= job.company.usertype %>/@<%= job.company.username %>">
+                          <%= job.company.name %> @<%= job.company.username %>
+                      </a>
+                      <div class="dropdown gram-card-time">
+                          <% if(user.usertype === 'company' && job.company.username === user.username) { %>
+                              <a style="margin-left: 10px" title="Delete" href="/job/delete/<%= job._id %>">🗑</a>
+                          <% } %>
+                      </div>
+                  </div>
+                  <br>
+                  <br>
+                  <div class="gram-card-content">
+                      <p>
+                          <br>
+                          <ul style="list-style-type: none;">
+                              <li>
+                                  <b style="color: rgb(113, 211, 32)">Role:</b> <%= job.role %>
+                              </li>
+                              <li>
+                                  <b style="color: rgb(113, 211, 32)">Experience:</b> <%= job.experience %>
+                              </li>
+                              <li>
+                                  <b style="color: rgb(113, 211, 32)">Skills:</b> 
+                                  <% for (let skill of job.skills) { %>
+                                      <span class="label label-warning"><%= skill %></span>
+                                  <% } %>
+                              </li>
+                              <li>
+                                  <b style="color: rgb(113, 211, 32)">Description:</b> 
+                                  <br>
+                                  <%- job.description -%>
+                              </li>
+                          </ul>
+                          <br>
+                          <br>
+                          <a class="btn btn-success" href="/post/job/apply/<%= job._id %>">Apply</a>
+                          <a class="btn btn-warning" href="mailto:<%= job.company.email %>?subject=Regarding opening for <%= job.role %>">Mail</a>
+                      </p>
+                  </div>
+                </div>
+              </div>
+            <% } %>
+        </div>
+      </div>
+    </div>
+    <%- include('../components/tabs') -%> <%- include('../components/footer') -%>
+    <div id="notify_message" class="notify_message-success"></div>
+  </body>
+  <script src="/scripts/vendor/classie.js"></script>
+  <script src="/scripts/vendor/notificationFx.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $.ajax({
+        method: "GET",
+        url: "/api/v1/notifications?cache=" + Math.random()
+      }).done(function (data) {
+        if (data != 0) {
+          if (data == localStorage.notified) {
+            return
+          } else {
+            localStorage.notified = data
+          }
+          show_new_notification({ msg: `You have ${data} new notification(s).` }, "notice", data)
+        }
+      })
+    })
+  </script>
+</html>

@@ -1,0 +1,45 @@
+<style>
+  .btn:focus {
+    outline: none !important;
+  }
+</style>
+<script src="/scripts/vendor/darkreader.min.js"></script>
+<script>
+  console.log(window.location.href)
+  if (
+    window.location.href.split("?logged-in") &&
+    window.location.href.split("?logged-in").length > 1
+  ) {
+    show_notification("Welcome to Appy-by-AI")
+    window.history.pushState(null, null, window.location.pathname)
+  }
+
+  if (localStorage.nightMode === "on") {
+    toggleNight(true)
+  } else {
+    toggleNight(false)
+  }
+  $("#darkmode").on("click", function () {
+    toggleNight()
+  })
+  function toggleNight(night = "other") {
+    if (night != "other") {
+      if (night == true) {
+        localStorage.nightMode = "on"
+        DarkReader.enable()
+      } else {
+        localStorage.nightMode = "off"
+        DarkReader.disable()
+      }
+    } else {
+      if (localStorage.nightMode == "on") {
+        DarkReader.disable()
+        localStorage.nightMode = "off"
+      } else {
+        localStorage.nightMode = "on"
+        DarkReader.enable()
+      }
+    }
+    return localStorage.nightMode
+  }
+</script>

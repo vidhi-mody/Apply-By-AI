@@ -1,0 +1,194 @@
+<%
+function timeSince(o) {
+  var t = Math.floor((new Date() - o) / 1e3),
+    r = Math.floor(t / 31536e3)
+  return r > 1
+    ? r + " years"
+    : (r = Math.floor(t / 2592e3)) > 1
+    ? r + " months"
+    : (r = Math.floor(t / 86400)) > 1
+    ? r + " days"
+    : (r = Math.floor(t / 3600)) > 1
+    ? r + " hours"
+    : (r = Math.floor(t / 60)) > 1
+    ? r + " minutes"
+    : Math.floor(t) + " seconds"
+}
+%>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include('../components/head') -%>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/moment.css" />
+    <link type="text/css" rel="stylesheet" media="screen" href="/stylesheets/vendor/jquery-sakura.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js" integrity="sha256-OgiHfllOBEOiWQ2OcBsDncRG2k7QBW9Rs1dB7MH2N2s=" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div class="container-fluid navbar-fixed-top box-shadow" style="background-color: #fff; margin-bottom: 2rem;">
+      <br />
+      <b>
+        <a class="back-btn" onclick="takeMeBack()"><i class="fa fa-lg fa-arrow-left"></i></a>
+        <% if(receiver.usertype === 'user') { %>
+        <img src="<%= receiver.resume.basics.picture %>" class="logo" />
+        <% } else { %>
+        <img src="<%= receiver.logo %>" class="logo" />
+        <% } %> <%= receiver.username %>
+      </b>
+      <br />
+      <br />
+    </div>
+    <br />
+
+    <div class="container" style="margin-top: 9rem;">
+      <ul class="list-group">
+        <% if(!room.messages.length) { %>
+        <div class="row">
+          <div class="col-md-12">
+            Send a message below!
+          </div>
+        </div>
+        <% } %> <% if(room.messages) { %> <% for(let message of room.messages) { %>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <% if(message.by.usertype === 'user') { %>
+            <img class="logo" style="height: 30px; width: 30px;" src="<%= message.by.resume.basics.picture %>" />
+            <% } else { %>
+            <img class="logo" style="height: 30px; width: 30px;" src="<%= message.by.logo %>" />
+            <% } %>
+            <a href="/users/<%= message.by.usertype %>/@<%= message.by.username %>">
+              <b><%= message.by.username %></b>
+            </a>
+            <span data-time="<%= message.time %>" class="timeSince float-right"><% timeSince(new Date(message.time)) %></span>
+            <br />
+            <br />
+            <span class="msg"><%= message.txt %></span>
+          </li>
+        </ul>
+        <% } %> <% } %>
+      </ul>
+      <div style="display: none;" id="typing" class="row">
+        <div class="col-md-12"><span id="typingWords"></span><span id="wait">.</span></div>
+      </div>
+    </div>
+    <div class="container">
+      <input type="text" class="form-control" id="msg" placeholder="Type something..." />
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+    <%- include('../components/tabs') -%> <%- include('../components/footer') -%>
+  </body>
+  <script type="text/javascript">
+    scrollingElement = document.scrollingElement || document.body
+    function scrollSmoothToBottom(id) {
+      $(scrollingElement).animate(
+        {
+          scrollTop: document.body.scrollHeight
+        },
+        500
+      )
+    }
+
+    function timeSince(o) {
+      var t = Math.floor((new Date() - o) / 1e3),
+        r = Math.floor(t / 31536e3)
+      return r > 1
+        ? r + " years"
+        : (r = Math.floor(t / 2592e3)) > 1
+        ? r + " months"
+        : (r = Math.floor(t / 86400)) > 1
+        ? r + " days"
+        : (r = Math.floor(t / 3600)) > 1
+        ? r + " hours"
+        : (r = Math.floor(t / 60)) > 1
+        ? r + " minutes"
+        : Math.floor(t) + " seconds"
+    }
+    setInterval(() => {
+      Array.from($(".timeSince")).forEach((t) => {
+        var date = new Date($(t).attr("data-time"))
+        var since = timeSince(date)
+        $(t).text(since)
+      })
+    }, 30000)
+
+    var socket = io()
+
+    function addMessage(data) {
+      const list = $(".list-group")[0]
+      showTyping(null, true)
+      console.log(data)
+      list.innerHTML += `<ul class="list-group">
+        <li class="list-group-item">
+          <img class="logo" style="height: 30px;width: 30px;" src="${data.by.usertype === "user" ? data.by.resume.basics.picture : data.by.logo}">
+          <a href="/u/@${data.by.username}"><b>${data.by.username}</b></a><span data-time="${data.time}" class="timeSince float-right">${timeSince(new Date(data.time))}</span>
+          <br><br> <span class="msg">${data.txt}</span>
+        </li>
+      </ul>`
+      scrollSmoothToBottom()
+    }
+
+    var timeLeft = 0
+    var i
+    var dotInterval
+
+    function dots() {
+      clearInterval(dotInterval)
+      dotInterval = setInterval(function () {
+        var wait = document.getElementById("wait")
+        if (wait.innerHTML.length > 3) wait.innerHTML = ""
+        else wait.innerHTML += "."
+      }, 200)
+    }
+
+    function showTyping(data, stop) {
+      if (stop) return $("#typing").fadeOut(200)
+      if (i) clearInterval(i)
+      dots()
+      $("#typingWords").text(`${data.username} is typing`)
+      $("#typing").fadeIn(200)
+      var timeLeft = 2000
+      i = setInterval(() => {
+        timeLeft -= 200
+        if (timeLeft == 0) {
+          $("#typing").fadeOut(200)
+          clearInterval(i)
+          clearInterval(dotInterval)
+        }
+        console.log(timeLeft)
+      }, 100)
+    }
+
+    socket.on("connect", function (data) {
+      console.log("Connected! Enjoy Friend.ly Direct Messages.")
+    })
+    socket.on("new msg", function (data) {
+      addMessage(data)
+    })
+    socket.on("typing", function (data) {
+      showTyping(data)
+    })
+
+    function trySendingMsg(e) {
+      if (e.keyCode == 13 && e.target.value) {
+        var data = {
+          txt: e.target.value,
+          time: new Date()
+        }
+        socket.emit("msg", data)
+        $("#msg").val("")
+      } else {
+        socket.emit("typing")
+      }
+    }
+
+    $("#msg").on("keydown", trySendingMsg)
+    scrollSmoothToBottom()
+
+    function takeMeBack() {
+      history.back()
+    }
+  </script>
+</html>

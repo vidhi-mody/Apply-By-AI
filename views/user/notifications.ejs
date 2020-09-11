@@ -1,0 +1,46 @@
+<% function timeSince(o){var t=Math.floor((new Date-o)/1e3),r=Math.floor(t/31536e3);return r>1?r+" years":(r=Math.floor(t/2592e3))>1?r+" months":(r=Math.floor(t/86400))>1?r+" days":(r=Math.floor(t/3600))>1?r+" hours":(r=Math.floor(t/60))>1?r+" minutes":Math.floor(t)+" seconds"}%>
+
+<!DOCTYPE html>
+<html>
+  <%- include('../components/head') -%>
+  <body>
+    <%- include('../components/navbar') -%>
+    <div id="mainPage" style="height: 100%;">
+      <%- include('../components/sidebar') -%>
+      <div class="column col-xs-12 col-sm-9 col-lg-10" style="margin: auto;" id="main">
+        <div class="row">
+          <div class="col-md-12">
+            <br />
+            <i class="fa fa-bell" style="color: #2a6171; font-size: 30px;"></i>
+            <h2>
+              <%= user.notifications.length == 0 ? "No new " : user.notifications.length + " " %>Notifications
+            </h2>
+            <br />
+            <% if(user.notifications.length > 0) { %>
+            <form action="/api/v1/notifications/markAsRead" class="float-left" method="post">
+              <button type="submit" class="btn btn-sm btn-success">Mark all as read</button>
+            </form>
+            <% } else { %>
+            <a type="submit" class="btn btn-sm btn-success" href=""> Refresh </a>
+            <% } %>
+          </div>
+        </div>
+        <br />
+        <ul class="list-group">
+          <% for(let notification of user.notifications) { %>
+            <li class="list-group-item">
+                <a href="#">
+                    <%= notification.msg %>
+                </a> 
+                - 
+                <b><%= timeSince(new Date(notification.time)) %> ago</b>
+                <br>
+            </li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+    <%- include('../components/tabs') -%>
+    <%- include('../components/footer') -%>
+  </body>
+</html>

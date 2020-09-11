@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <%- include('../../components/head') -%>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/landing.css" />
+  <link rel="stylesheet" type="text/css" href="/stylesheets/moment.css" />
+  <body>
+    <%- include('../../components/navbar') -%>
+    <div class="landing-main">
+      <!-- Banner -->
+      <section id="banner">
+        <div class="inner">
+          <ul class="actions special stacked">
+            <li>
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-8 col-sm-12 col-xs-12" style="margin:auto">
+                    <form action="/account/new/company/info" method="POST" enctype="multipart/form-data">
+                      <h3 style="color: black; text-align: left;">GENERAL</h3>
+                      <div class="form-group">
+                        <label for="website">Company Name*</label>
+                        <input type="name" class="form-control" id="name" placeholder="Enter the company name" name="name" />
+                      </div>
+                      <div class="form-group">
+                        <label for="website">Email*</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter the company email" name="email" />
+                      </div>
+                      <div class="form-group">
+                        <label for="password">Password*</label>
+                        <input type="password" pattern=".{8,}" class="form-control" id="password" placeholder="Enter password" name="password" />
+                      </div>
+                      <div class="form-group">
+                        <label for="password2">Confirm Password*</label>
+                        <input type="password" pattern=".{8,}" class="form-control" id="password2" placeholder="Re-enter your password" name="password2" />
+                      </div>
+                      <div class="form-group">
+                        <label for="website">Website*</label>
+                        <input type="url" class="form-control" id="website" placeholder="Enter the company website" name="website" />
+                      </div>
+                      <div class="form-group">
+                        <label for="website">Avatar*</label>
+                        <input type="file" onchange="readURL(this);" class="form-control" id="logo" placeholder="Company logo" name="logo" required/>
+                      </div>
+                      <div class="form-group">
+                        <img src="" id="img-preview" style="width: 50px; margin: auto" />
+                      </div>
+                      <div class="form-group">
+                        <label for="expertise">Company size*</label>
+                        <input type="number" class="form-control" id="size" placeholder="Number of employees (eg. 100)" name="company-size" required />
+                      </div>
+                      <div class="form-group">
+                        <label for="description">Company Description*</label>
+                        <textarea class="form-control" id="description" placeholder="A short paragraph describing your company" name="description" required></textarea>
+                      </div>
+
+                      <h3 style="color: black; text-align: left; margin-top: 40px;">
+                        LOCATION
+                      </h3>
+                      <div class="form-group">
+                        <label for="address">Address*</label>
+                        <input type="text" class="form-control" id="address" placeholder="Enter company address" name="address" required />
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="city">City*</label>
+                          <input type="text" name="city" class="form-control" id="city" placeholder="City" required />
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="postalCode">Postal Code*</label>
+                          <input type="text" name="postalCode" class="form-control" id="postalCode" placeholder="Postal Code" required />
+                        </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="countryCode">Country Code*</label>
+                          <input type="text" name="countryCode" class="form-control" id="countryCode" placeholder="Country Code (eg. US)" required />
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="region">Region*</label>
+                          <input type="text" name="region" class="form-control" id="region" placeholder="Region (eg. CA)" required />
+                        </div>
+                      </div>
+                      <br>
+                      <button type="submit" class="button primary btn btn-primary">
+                        Submit
+                      </button>
+                      <button type="reset" style="background-color: red;" class="button btn btn-warning">
+                        Reset
+                      </button>
+                      <hr>
+                      <p>
+                        Already have an account?
+                        <br>
+                        <a href="/account/company/login">
+                          Login
+                        </a> instead
+                      </p>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <div id="notify_message" class="notify_message-success"></div>
+    <%- include('../../components/footer') -%>
+  </body>
+  <script type="text/javascript">
+    var error = <%- JSON.stringify(error) -%>;
+    if(error) {
+      show_notification(error, 'danger')
+    }
+
+    function readURL(input) {
+      if (input.files && input.files[0]) {
+          var reader = new FileReader()
+
+          reader.onload = function(e) {
+              if(e.target.result.match(RegExp('data:img*'))) {
+                  $('#img-preview').attr('src', e.target.result)
+              }
+          }
+
+          reader.readAsDataURL(input.files[0])
+      }
+    }
+    $('#header > a:last-child').hide()
+  </script>
+  <script src="/scripts/vendor/breakpoints.min.js"></script>
+  <script src="/scripts/vendor/browser.min.js"></script>
+  <script src="/scripts/vendor/classie.js"></script>
+  <script src="/scripts/vendor/main.js"></script>
+  <script src="/scripts/vendor/jquery.scrolly.min.js"></script>
+  <script src="/scripts/util.js"></script>
+  <script src="/scripts/vendor/modernizr.custom.js"></script>
+  <script src="/scripts/vendor/notificationFx.js"></script>
+</html>

@@ -1,0 +1,59 @@
+branchName: short
+version: 2
+nightrabot:
+  - when: issue.opened
+    name: 'Issue description should not be empty'
+    validate:
+      - do: description
+        no_empty:
+          enabled: true
+    fail:
+      - do: comment
+        payload:
+          body: >
+            The issue description cannot be empty
+  - when: pull_request.*, pull_request_review.*
+    name: "PR must have an assignee"
+    validate:
+      - do: assignee
+        min:
+          count: 1
+    pass:
+      - do: labels
+        labels: ["👓 Review"]
+      - do: request_review
+        reviewers: ["und3fined-v01d"]
+      - do: comment
+        payload:
+          body: >
+            @und3fined-v01d, this issue is ready to be reviewed.
+    fail:
+      - do: comment
+        payload:
+          body: >
+            Pull request must have an assignee
+  - when: pull_request.*, pull_request_review.*
+    name: "PR is not WIP"
+    validate:
+      - do: title
+        must_exclude:
+          regex: ^\[WIP\]
+          message: This PR is marked Work in Progress and cannot be merged
+      - do: description
+        must_exclude:
+          regex: wip
+          message: This PR is marked Work in Progress and cannot be merged
+    fail:
+      - do: comment
+        payload:
+          body: This PR is marked Work in Progress and cannot be merged
+  - when: pull_request.*, pull_request_review.*
+    name: "PR description must not be empty"
+    validate:
+      - do: description
+        no_empty:
+          enabled: true
+    fail:
+      - do: comment
+        payload:
+          body: PR must follow semantic release conventions.

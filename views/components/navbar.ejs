@@ -1,0 +1,28 @@
+<div>
+  <header id="header">
+    <h1>
+      <a href="/">
+        <img src="/images/logo/logo.png" class="logo" /> 
+      </a>
+    </h1>
+    <% if(!user) {%>
+        <a href="/account/google">Log In</a>
+    <% } else { %> 
+        <a href="/me"
+        ><img
+            width="50"
+            style="border-radius: 50%;"
+            src="<%= user.usertype === 'company' ? user.logo : user.resume.basics.picture %>"
+        /></a>
+
+        <a
+        style="outline: none;"
+        type="button"
+        class="btn btn-link margin-top-20"
+        id="sidebarToggle"
+        >
+        <i class="fa fa-lg fa-align-left pills"></i>
+        </a>
+    <% } %>
+  </header>
+</div>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+    <%- include('../components/head') -%>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/moment.css">
+    <body>
+        <%- include('../components/navbar') -%>
+        <div style="margin-top: 75px">
+            <%- include('../components/sidebar') -%>
+            <div class="col-xs-12 col-sm-9 col-lg-10" style="margin:auto" id="main">
+                <div class="row profile">
+                    <div class="col-md-4">
+                        <div class="profile-sidebar">
+                            <div class="profile-userpic">
+                                <center>
+                                    <img src="<%= searchUser.resume.basics.picture %>" class="img-responsive" style="width: 150px; height: 150px" alt="">
+                                </center>
+                            </div>
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-name">
+                                    <%= searchUser.resume.basics.name %> 
+                                    <br>
+                                    <small style="color: orange;">@<%= searchUser.username %></small>
+                                    <br>
+                                </div>
+                                <div class="profile-usertitle-job">
+                                    <%= searchUser.resume.basics.label %>
+                                </div>
+                                <div class="profile-user-desc">
+                                    <i><%= searchUser.resume.basics.summary %></i>
+                                </div>
+                            </div>
+                            <div class="profile-userbuttons">
+                                <div class="row">
+                                    <% if(user.usertype !== 'company' && searchUser.username !== user.username) { %>
+                                        <div class="col-md">
+                                            <button type="button" id="follow-btn" data-follow="<%= searchUser %>" style="margin-top:5px" class="btn btn-danger btn-sm">
+                                                <% if(searchUser.followers && searchUser.followers.find(x => x.usertype == user.usertype && x._id == user._id)) { %>
+                                                    Unfollow
+                                                <% } else { %>
+                                                    Follow
+                                                <% } %>
+                                            </button>
+                                        </div>
+                                    <% } %>
+                                    <% if(user.usertype !== searchUser.usertype || user.username !== searchUser.username) { %>
+                                    <div class="col-md">
+                                        <a type="button" href="/chat/user/<%= searchUser._id %>" style="margin-top:5px" class="btn btn-success btn-sm">
+                                            Message
+                                        </a>
+                                    </div>
+                                    <% } %>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6" title="Reach out via Email">
+                                        <a type="button" style="margin-top:5px" href="mailto:<%= searchUser.resume.basics.email %>" class="btn btn-primary btn-sm">
+                                            Email
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6" title="Know about user skills">
+                                        <a type="button" style="margin-top:5px" href="/users/user/@<%= searchUser.username %>/resume/" class="btn btn-warning btn-sm">
+                                            Resume
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="profile-usermenu">
+                                    <ul class="nav">
+                                        <li name="posts" class="tab active">
+                                            <a href="#" title="Recent posts">
+                                                <i class="fa fa-newspaper"></i>
+                                                    Posts
+                                                </a>
+                                        </li>
+                                        <li name="applications" class="tab active">
+                                            <a href="#" title="Applications">
+                                                <i class="fa fa-briefcase"></i>
+                                                    Applications
+                                                </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div id="posts" class="profile-content tabs">
+                            <h2>Posts</h2>
+                            <br>
+                            <div class="row" style="height: 100vh; overflow-y: scroll;">
+                                <% for(let post of searchUser.posts) { %>
+                                    <div class="col-md">
+                                        <div class="gram-card">
+                                            <div class="gram-card-header">
+                                                <img class="gram-card-user-image lozad" src="<%= (searchUser.usertype == 'user' ? searchUser.resume.basics.picture : searchUser.logo ) %>">
+                                                <a class="gram-card-user-name" href="/users/<%= searchUser.usertype %>/@<%= searchUser.username %>">
+                                                    <%= searchUser.username %>
+                                                </a>
+                                                <div class="dropdown gram-card-time">
+                                                    <% if(searchUser.usertype === user.usertype && searchUser.username === user.username) { %>
+                                                        <a style="margin-left: 10px" title="Delete" href="/post/delete/<%= post._id %>">🗑</a>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <br>
+                                            <% if(post.staticUrl && ['png', 'jpg', 'gif', 'jpeg'].includes(post.type)) { %>
+                                                <div class="gram-card-image">
+                                                    <center>
+                                                      <a href="<%= post.staticUrl %>" class="progressive replace">
+                                                        <img author="<%= post.author.username %>" src="<%= post.staticUrl %>" id="<%= post._id %>" class="post img-responsive lozad preview">
+                                                      </a> 
+                                                    </center>
+                                                </div>
+                                            <% } else if(post.staticUrl) { %>
+                                                <div class="gram-card-image">
+                                                    <center>
+                                                      <video author="<%= searchUser.username %>" src="<%= post.staticUrl %>" id="<%= post._id %>" class="post img-responsive" controls></video>
+                                                    </center>
+                                                  </div>
+                                            <% } %>
+                                            <div class="gram-card-content">
+                                                <p>
+                                                    <a style="color: rgb(195, 173, 48);" class="gram-card-content-user" href="/users/<%= searchUser.usertype %>/@<%= searchUser.username %>"><%= searchUser.username %>
+                                                    </a>
+                                                    <br>
+                                                    <br>
+                                                    <%= post.caption %>
+                                                    <br>
+                                                    <br>
+                                                    <span class="label label-info"><%= post.category ? post.category : "Unknown" %></span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                        <div id="applications" class="profile-content tabs" style="display:none">
+                            <h2>Applications</h2>
+                            <br />
+                            <div class="row" style="height: 100vh; overflow-y: scroll;">
+                              <% for(let application of applications) { %>
+                                <div class="col-md">
+                                  <div class="gram-card">
+                                    <div class="gram-card-header">
+                                        <img class="gram-card-user-image lozad" src="<%= (application.for.company.logo ) %>">
+                                        <a class="gram-card-user-name" href="/users/company/@<%= application.for.company.username %>">
+                                            <%= application.for.company.name %> @<%= application.for.company.username %>
+                                        </a>
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <div class="gram-card-content">
+                                        <p>
+                                            <br>
+                                            <ul style="list-style-type: none;">
+                                                <li>
+                                                    <b style="color: rgb(113, 211, 32)">Role:</b> <%= application.for.role %>
+                                                </li>
+                                                <li>
+                                                    <b style="color: rgb(113, 211, 32)">Experience:</b> <%= application.for.experience %>
+                                                </li>
+                                                <li>
+                                                    <b style="color: rgb(113, 211, 32)">Skills:</b> 
+                                                    <% for (let skill of application.for.skills) { %>
+                                                        <span class="label label-warning"><%= skill %></span>
+                                                    <% } %>
+                                                </li>
+                                                <li>
+                                                    <b style="color: rgb(113, 211, 32)">Description:</b> 
+                                                    <br>
+                                                    <%- application.for.description -%>
+                                                </li>
+                                            </ul>
+                                            <br>
+                                            <br>
+                                            <span class="label label-info"><%= application.selected %></span>
+                                        </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              <% } %>
+                            </div>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="notify_message" class="notify_message-success">
+            <center>Follow @<%= searchUser.username %>!</center>
+        </div>
+        <%- include('../components/tabs') -%>
+        <%- include('../components/footer') -%>
+    </body>
+    <script>
+        var tabs = $(".tab");
+        tabs.on("click", function(e) {
+          let tab = this;
+          e.preventDefault();
+          tabs.removeClass("active");
+          $(tab).addClass("active");
+          $(".tabs").fadeOut(500,function() {
+            $("#" + $(tab).attr("name")).delay(500).fadeIn();
+          });
+          return false;
+        });
+    </script>
+</html>
