@@ -52,7 +52,7 @@ router.post('/upload', formParser, async (req, res, next) => {
   const newPost = new Post({
     author: req.session.user._id,
     staticUrl: finalLocation,
-    caption: req.body.caption,
+    caption: req.body.caption ? marked(req.body.caption) : "",
     category: req.body.type,
     type: mimetype,
     createdAt: new Date(),
