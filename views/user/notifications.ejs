@@ -29,7 +29,7 @@
         <ul class="list-group">
           <% for(let notification of user.notifications) { %>
             <li class="list-group-item">
-                <a href="#">
+                <a href="<%= notification.link %>">
                     <%= notification.msg %>
                 </a> 
                 - 
