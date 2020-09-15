@@ -20,8 +20,8 @@ $(document).ready(function () {
           <input type="text" class="form-control" id="position" placeholder="Enter your job role" name="position[]" required />
         </div>
         <div class="form-group">
-          <label for="position">Company Website*</label>
-          <input type="url" class="form-control" id="companyWebsite" placeholder="Enter your company website" name="companyWebsite[]" required />
+          <label for="position">Company Website</label>
+          <input type="url" class="form-control" id="companyWebsite" placeholder="Enter your company website" name="companyWebsite[]" />
         </div>
         <div class="form-row">
           <div class="form-group col-md-6">
