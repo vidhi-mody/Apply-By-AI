@@ -8,7 +8,7 @@
     <% if(!user) {%>
         <a href="/account/google">Log In</a>
     <% } else { %> 
-        <a href="/me"
+        <a href="/users/<%= user.usertype %>/@<%= user.username %>"
         ><img
             width="50"
             style="border-radius: 50%;"
