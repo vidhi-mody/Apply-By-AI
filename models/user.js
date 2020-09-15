@@ -46,12 +46,7 @@ const User = mongoose.Schema({
           validator: (v) => validator.isMobilePhone(v)
         }
       },
-      website: {
-        type: String,
-        validate: {
-          validator: (v) => validator.isURL(v)
-        }
-      },
+      website: String,
       summary: {
         type: String,
         default: 'Connect with me on Apply-by-AI'
