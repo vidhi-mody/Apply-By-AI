@@ -80,7 +80,7 @@
               <h2>Posts</h2>
               <br />
               <div class="row" style="height: 100vh; overflow-y: scroll;">
-                <% for(let post of company.posts) { %>
+                <% for(let post of company.posts.reverse()) { %>
                     <div class="col-md">
                         <div class="gram-card">
                             <div class="gram-card-header">
@@ -117,7 +117,7 @@
                                     </a>
                                     <br>
                                     <br>
-                                    <%= post.caption %>
+                                    <%- post.caption -%>
                                     <br>
                                     <br>
                                     <span class="label label-info"><%= post.category ? post.category : "Unknown" %></span>
