@@ -58,7 +58,7 @@
     function receivehandler(event) {
       console.log("last response:", event.data.output.generic[0].text)
       var end = event.data.output.generic[0].text
-      if (end === "Thank you so much for taking out the time for the interview!") {
+      if (end === "Thank you so much for taking out the time for the interview! You'll be hearing from CSI.") {
         axios({
           method: "post",
           url: "/bot/<%= jobId %>/<%= user._id %>/",
