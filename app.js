@@ -179,4 +179,8 @@ app.use((error, req, res, next) => {
   res.render('error')
 })
 
+if (process.env.GENERATE_DATA) {
+  require('./startup')
+}
+
 module.exports = app

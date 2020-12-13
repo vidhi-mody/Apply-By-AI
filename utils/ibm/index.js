@@ -20,6 +20,7 @@ const toneAnalyzer = new ToneAnalyzerV3({
   url: process.env.WATSON_TONE_URL
 })
 
+// eslint-disable-next-line no-unused-vars
 const countWords = (doc) => {
   doc = doc.replace(/(^\s*)|(\s*$)/gi, '')
   doc = doc.replace(/[ ]{2,}/gi, ' ')
@@ -54,5 +55,29 @@ module.exports = {
       score,
       name: tone_id
     }
+  },
+  async analyzePersonalityWithNeedsAndValues (text) {
+    const personalityAnalysis = await personalityInsights.profile({
+      content: text,
+      contentType: 'text/plain',
+      consumptionPreferences: true
+    })
+    const { needs, personality: traits, values } = personalityAnalysis.result
+    const output = {}
+    for (const { name, percentile, children } of traits) {
+      output[name.toLowerCase()] = {
+        percentile,
+        facets: _.map(children, (child) => {
+          return _.pick(child, 'name', 'percentile')
+        })
+      }
+    }
+    for (const { name, percentile } of needs) {
+      output[name.toLowerCase()] = percentile
+    }
+    for (const { name, percentile } of values) {
+      output[name.toLowerCase()] = percentile
+    }
+    return output
   }
 }
